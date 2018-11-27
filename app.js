@@ -6,6 +6,8 @@ let mongodbURL = process.env.DBURL || "mongodb://localhost:27017/todoapp" ;
 let todolist = require("./models/todoModel")
 const app = express();
 
+let apiRouter = require("./routers/api");
+
 // MongoDB Config
 mongoose.connect(mongodbURL,{ useNewUrlParser: true });
 mongoose.set('useFindAndModify', false);
@@ -13,7 +15,11 @@ mongoose.set('useCreateIndex', true);
 
 // App config
 app.set('view engine','ejs');
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/api',apiRouter);
 
 app.get('/',(req,res)=>{
     res.send('app start');
